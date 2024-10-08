@@ -1,19 +1,18 @@
-export const datasets = {
-    
-    // Tests handling of empty data
-    "Empty Dataset": [],  
+type Dataset = Array<{ [key: string]: any }>;
+
+export const datasets: { [key: string]: Dataset } = {
   
-    // Tests minimum data scenario
-    "Single Row Dataset": [
-      { id: 1, name: "John Doe", age: 30 }
-    ],  
+  "Empty Dataset": [],
+ 
+  "Single Row Dataset": [
+    { id: 1, name: "John Doe", age: 30 }
+  ],
   
-    // Tests basic functionality with multiple rows
-    "Basic Dataset": [
-      { id: 1, name: "John Doe", age: 30 },
-      { id: 2, name: "Jane Smith", age: 25 },
-      { id: 3, name: "Bob Johnson", age: 45 }
-    ],  
+  "Basic Dataset": [
+    { id: 1, name: "John Doe", age: 30 },
+    { id: 2, name: "Jane Smith", age: 25 },
+    { id: 3, name: "Bob Johnson", age: 45 }
+  ],
   
     // Tests horizontal scrolling for many columns
     "Many Columns Dataset": [

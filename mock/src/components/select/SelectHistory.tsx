@@ -9,25 +9,38 @@ import { histEntry } from "./Select";
  *  outputted to the end-user in the main output area
  */
 interface SelectHistoryProps {
-  history: Array<histEntry>;
+  data: any[];
+  datasetName: string;
 }
 
-/**
- * Builds a SelectHistory component that displays the output area according
- *  to any commands inputted by the user.
- *
- * @param props the history entries (see SelectHistoryProps for more details)
- * @returns JSX that will print a tabular view of the passed in data
- */
-export function SelectHistory(props: SelectHistoryProps) {
+export function SelectHistory({ data, datasetName }: SelectHistoryProps) {
+  if (!data || data.length === 0) {
+    return <div>No data available</div>;
+  }
+
+  const headers = Object.keys(data[0]);
+
   return (
-    <div className="select-history" aria-label="select history">
-      {/* TODO 2: add to the JSX to display your text in the main output area!  */}
-      {props.history.map((entry, index) => (
-        <div key={index}>
-          <p>{entry.data}</p>
-        </div>
-      ))}
+    <div className="table-container">
+      <h2>{datasetName}</h2>
+      <table>
+        <thead>
+          <tr>
+            {headers.map((header) => (
+              <th key={header}>{header}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((row, index) => (
+            <tr key={index}>
+              {headers.map((header) => (
+                <td key={`${index}-${header}`}>{row[header]}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
