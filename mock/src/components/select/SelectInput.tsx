@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import "../../styles/main.css";
 import { histEntry } from "./Select";
+import { datasets } from '../../mocks/mockedData';
 
 /**
  * A interface for SelectInput.
@@ -10,47 +11,31 @@ import { histEntry } from "./Select";
  * setHistory: function to add new history entry to history array
  */
 interface SelectInputProps {
-  history: Array<histEntry>;
-  setHistory: Dispatch<SetStateAction<Array<histEntry>>>;
+  onDatasetSelect: (datasetName: string) => void;
 }
 
 
 export function SelectInput(props: SelectInputProps) {
-  function handleSubmit(text: string) {
-    let newEntry: histEntry = {
-      data: text,
-    };
-    props.setHistory([...props.history, newEntry]);
+
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedDatasetName = event.target.value;
+    props.onDatasetSelect(selectedDatasetName);
   }
+
   return (
     <div className="dropdown-container">
       <select
         className="dropdown"
-        name="dropdown"
-        id="dropdown"
-        aria-label="dropdown"
-      >
-        <option>Nim Telson</option>
-        <option>Angel</option>
-        <option>Bagel</option>
-        {/* TODO 1: add more options to the dropdown here */}
-      </select>
-      {/* TODO 2: add a button here to display the current dropdown option as text
-            on the main output area
-            (Hint: use the setHistory useState set function) 
-  */ <button
-  onClick={() => {
-    const selectElement = document.getElementById(
-      "dropdown"
-    ) as HTMLSelectElement | null;
-    const selectText =
-      selectElement?.options[selectElement.selectedIndex]?.text;
-    if (selectText != null) {
-      handleSubmit(selectText);
-    }
-  }}
-  aria-label="submit"
-  >Submit</button>}
+        onChange={handleChange}
+        aria-label="Select a dataset"
+        >
+          <option value="">Select a dataset</option>
+          {Object.keys(datasets).map((filePath) => (
+            <option key ={filePath} value={filePath}>
+              {filePath}
+            </option>
+          ))}
+        </select>
     </div>
   );
   }
