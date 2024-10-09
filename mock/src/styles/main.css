@@ -1,25 +1,70 @@
-/* CSS for Main Select interface */
-
-.select {
-  position: relative;
-  min-height: 95vh;
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.select-history {
-  height: 55vh;
-  margin: auto;
-  display: block;
-  overflow: scroll;
+.App {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.App-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #282c34;
+  color: white;
+}
+
+.select-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 20px auto;
+}
+
+.dropdown-container {
+  margin-bottom: 20px;
 }
 
 .dropdown {
-  width: 10vw;
-  margin: 10px;
-  cursor: pointer;
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
 }
 
-.dropdown > option {
-  text-align: center;
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  max-height: 70vh;
+  overflow-y: auto;
 }
 
-/** TODO 3: change the CSS on the submit button to ensure it's centered! **/
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #4CAF50;
+  color: white; 
+  font-weight: bold;
+}
