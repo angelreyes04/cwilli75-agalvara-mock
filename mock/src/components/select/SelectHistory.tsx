@@ -35,7 +35,10 @@ export function SelectHistory({ data, datasetName }: SelectHistoryProps) {
           {data.map((row, index) => (
             <tr key={index}>
               {headers.map((header) => (
-                <td key={`${index}-${header}`}>{row[header]}</td>
+                <td key={`${index}-${header}`}>
+                  {typeof row[header] === 'boolean' 
+                    ? row[header].toString() 
+                    : row[header]}</td>
               ))}
             </tr>
           ))}
