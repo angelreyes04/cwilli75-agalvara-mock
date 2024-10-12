@@ -1,0 +1,19 @@
+- Reflection on mocking in 2.1 and 2.2:
+Looking at my (Angel) repo, I feel like I did good mocking since I used dependency injection by 
+creating a mock datasource class, then passing that into the cache itself so it doesn't have to make an API call.
+
+- Reflection on mocking in 3.1:
+Our current mock data is being stored as a list of JSON, I don't think too much will need to change since the 
+overall structure of the data is being stored as a JSON already, but I'm sure issues will arise when we integrate the backend.
+
+Meta Reflection:
+
+1 - Yes, it was very new to the both of us since we have minimal experience in Typescript and no experience using react. 
+It felt like the design of the website was also very important, which we don't have experience designing websites so that was very new.
+
+2 - It didn't feel too new honestly, the testing felt the same but it was cool to get a report generated of our tests passing across different browsers
+as well as being able to test using the website without having to use the website.
+
+3 - One bug encountered was that initally boolean values were not being represented in the table on the website, which was odd since 
+special characters and numbers were being shown, we just had to change select history to consider 
+what to do when a value is a boolean. 
