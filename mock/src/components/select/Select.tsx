@@ -3,6 +3,7 @@ import "../../styles/main.css";
 import { SelectInput } from "./SelectInput";
 import { SelectHistory } from "./SelectHistory";
 import { datasets } from '../../mocks/mockedData';
+import { BarChartView } from '../bar chart/BarChartView';
 
 /**
  * A histEntry interface to structure each single output stored in the main output area
@@ -35,8 +36,9 @@ export interface Tab {
  *
  */
 export function Select() {
-  const [selectedData, setData] = useState<any[] | null > (null);
+  const [selectedData, setData] = useState<any[] | null>(null);
   const [selectedFilePath, setFilePath] = useState<string>("");
+  const [visualizationType, setVisualizationType] = useState<string>("table");
 
   const handleDataSelect = (filePath: string) => {
     setFilePath(filePath);
@@ -45,9 +47,32 @@ export function Select() {
 
   return (
     <div className="select-container">
-      <SelectInput onDatasetSelect={handleDataSelect} />
+      <SelectInput 
+        onDatasetSelect={handleDataSelect}
+        selectedDataset={selectedFilePath}
+      />
       {selectedData && (
-        <SelectHistory data={selectedData} datasetName={selectedFilePath} />
+        <div>
+          <div className="visualization-toggle">
+            <button 
+              onClick={() => setVisualizationType("table")}
+              className={visualizationType === "table" ? "active" : ""}
+            >
+              Table View
+            </button>
+            <button 
+              onClick={() => setVisualizationType("bar")}
+              className={visualizationType === "bar" ? "active" : ""}
+            >
+              Bar Chart
+            </button>
+          </div>
+          {visualizationType === 'table' ? (
+            <SelectHistory data={selectedData} datasetName={selectedFilePath} />
+          ) : (
+            <BarChartView data={selectedData} selectedDatasetName={selectedFilePath} />
+          )}
+        </div>
       )}
     </div>
   );

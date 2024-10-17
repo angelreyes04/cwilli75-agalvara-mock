@@ -12,30 +12,30 @@ import { datasets } from '../../mocks/mockedData';
  */
 interface SelectInputProps {
   onDatasetSelect: (datasetName: string) => void;
+  selectedDataset: string;
 }
 
-
-export function SelectInput(props: SelectInputProps) {
-
-  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+export function SelectInput({ onDatasetSelect, selectedDataset }: SelectInputProps) {
+  const handleDatasetChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedDatasetName = event.target.value;
-    props.onDatasetSelect(selectedDatasetName);
+    onDatasetSelect(selectedDatasetName);
   }
 
   return (
     <div className="dropdown-container">
       <select
         className="dropdown"
-        onChange={handleChange}
+        onChange={handleDatasetChange}
+        value={selectedDataset}
         aria-label="Select a dataset"
-        >
-          <option value="">Select a dataset</option>
-          {Object.keys(datasets).map((filePath) => (
-            <option key ={filePath} value={filePath}>
-              {filePath}
-            </option>
-          ))}
-        </select>
+      >
+        <option value="">Select a dataset</option>
+        {Object.keys(datasets).map((filePath) => (
+          <option key={filePath} value={filePath}>
+            {filePath}
+          </option>
+        ))}
+      </select>
     </div>
   );
-  }
+}
