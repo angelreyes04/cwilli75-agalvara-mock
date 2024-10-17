@@ -41,7 +41,7 @@ export function BarChartView({ data, selectedDatasetName }: BarChartViewProps) {
 
 
         if (axesFlipped && !numericKeys.includes(yKey)) {
-            setError("Cannot flip axes: Y-axis must contain numeric values");
+            alert("Cannot flip axes: Y-axis must contain numeric values");
             setAxesFlipped(false);
             return;
         }
