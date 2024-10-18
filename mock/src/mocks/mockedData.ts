@@ -125,5 +125,20 @@ export const datasets: { [key: string]: Dataset } = {
         creditCardNumber: "**** **** **** 9012",
         bankAccountNumber: "5678901234",
       }
+    ],
+    "Simple Bar Chart Data": [
+      { category: "A", value: 10 },
+      { category: "B", value: 20 },
+      { category: "C", value: 15 },
+      { category: "D", value: 25 },
+      { category: "E", value: 18 }
+    ],
+
+    "Simple Bar Chart Data 2": [
+      { category: 1, value: 10 },
+      { category: 2, value: 20 },
+      { category: 3, value: 15 },
+      { category: 4, value: 25 },
+      { category: 5, value: 18 }
     ]
   };
