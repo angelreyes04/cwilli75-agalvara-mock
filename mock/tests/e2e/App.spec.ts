@@ -121,4 +121,30 @@ test.describe('Mock Application Tests', () => {
     const lastRowContent = await page.locator('tr:last-child td:first-child').textContent();
     expect(lastRowContent).toBe('1000');
   });
+
+
+  test('renders bar chart correctly', async ({ page }) => {
+    await page.selectOption('select.dropdown', 'Simple Bar Chart Data' );
+    await page.waitForSelector('button:has-text("Bar Chart")');
+    await page.click('button:has-text("Bar Chart")');
+    
+    await page.waitForSelector('canvas');
+    const canvas = page.locator('canvas');
+    await expect(canvas).toBeVisible();
+    
+    const chartContainer = page.locator('.chart-wrapper');
+    await expect(chartContainer).toBeVisible();
+  });
+
+  test('displays error message for invalid data', async ({ page }) => {
+    await page.selectOption('select.dropdown', 'Invalid Data');
+    await page.waitForSelector('button:has-text("Bar Chart")');
+    await page.click('button:has-text("Bar Chart")');
+    
+    await page.waitForSelector('.error-message');
+    const errorMessage = page.locator('.error-message');
+    await expect(errorMessage).toBeVisible();
+    await expect(errorMessage).toContainText('No numeric columns found for Y-axis');
+  });
+
 });
