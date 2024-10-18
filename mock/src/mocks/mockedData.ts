@@ -140,5 +140,37 @@ export const datasets: { [key: string]: Dataset } = {
       { category: 3, value: 15 },
       { category: 4, value: 25 },
       { category: 5, value: 18 }
+    ],
+
+    "Numeric X-Axis": [
+      { year: 2019, sales: 100 },
+      { year: 2020, sales: 150 },
+      { year: 2021, sales: 200 },
+      { year: 2022, sales: 180 },
+      { year: 2023, sales: 220 }
+    ],
+
+    "Multiple Series": [
+      { month: "Jan", product1: 50, product2: 30 },
+      { month: "Feb", product1: 60, product2: 40 },
+      { month: "Mar", product1: 70, product2: 50 },
+      { month: "Apr", product1: 80, product2: 60 },
+      { month: "May", product1: 90, product2: 70 }
+    ],
+
+    "Long Labels": [
+      { category: "Very Long Category Name 1", value: 10 },
+      { category: "Extremely Long and Detailed Category Name 2", value: 20 },
+      { category: "Another Quite Long Category Name 3", value: 15 },
+      { category: "Yet Another Extended Category Title 4", value: 25 },
+      { category: "Final Long-Winded Category Label 5", value: 18 }
+    ],
+    
+    "Invalid Data": [
+      { category: "A", value: "Not a number" },
+      { category: "B", value: 20 },
+      { category: "C", value: null },
+      { category: "D", value: undefined },
+      { category: "E", value: 18 }
     ]
   };
