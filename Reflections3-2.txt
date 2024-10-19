@@ -1,0 +1,7 @@
+1. The syntax for react and typescript can be pretty confusing to follow as with Java and Python we feel like the syntax there is easier to read and understand the code.
+It also felt a little odd to combine HTML aspects such as divs into typescript and react. It was nice to see the live updates in the webpage.
+
+2. Yes, I feel like integration testing makes a lot more sense in front-end because its easier to think of how a user would use the entire webpage and the combination of different 
+pathways on the website rather than doing full integration testing for backend. 
+
+3. One bug was when flipping axes we weren't checking if the newly updated Y value was numerical, so if you flipped the axes and the Y value was now a non-numerical value, the bar chart would be empty.
