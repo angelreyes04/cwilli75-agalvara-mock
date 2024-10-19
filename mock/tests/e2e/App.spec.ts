@@ -121,4 +121,100 @@ test.describe('Mock Application Tests', () => {
     const lastRowContent = await page.locator('tr:last-child td:first-child').textContent();
     expect(lastRowContent).toBe('1000');
   });
+
+
+  test('renders bar chart correctly', async ({ page }) => {
+    await page.selectOption('select.dropdown', 'Simple Bar Chart Data' );
+    await page.waitForSelector('button:has-text("Bar Chart")');
+    await page.click('button:has-text("Bar Chart")');
+    
+    await page.waitForSelector('canvas');
+    const canvas = page.locator('canvas');
+    await expect(canvas).toBeVisible();
+    
+    const chartContainer = page.locator('.chart-wrapper');
+    await expect(chartContainer).toBeVisible();
+  });
+
+  test('displays error message for invalid data', async ({ page }) => {
+    await page.selectOption('select.dropdown', 'Invalid Data');
+    await page.waitForSelector('button:has-text("Bar Chart")');
+    await page.click('button:has-text("Bar Chart")');
+    
+    await page.waitForSelector('.error-message');
+    const errorMessage = page.locator('.error-message');
+    await expect(errorMessage).toBeVisible();
+    await expect(errorMessage).toContainText('No numeric columns found for Y-axis');
+  });
+
+  test('navigate between datasets and visualizations', async ({ page }) => {
+    // Function to check if table is visible and has content
+    async function checkTable() {
+      const table = page.locator('table');
+      await expect(table).toBeVisible();
+      const rows = await table.locator('tr').count();
+      expect(rows).toBeGreaterThan(1); // At least header row and one data row
+    }
+
+    // Function to check if bar chart is visible
+    async function checkBarChart() {
+      const chartWrapper = page.locator('.chart-wrapper');
+      await expect(chartWrapper).toBeVisible();
+      const canvas = chartWrapper.locator('canvas');
+      await expect(canvas).toBeVisible();
+    }
+
+    // Start with 'Simple Bar Chart' dataset in table view
+    await page.selectOption('select.dropdown','Simple Bar Chart Data');
+    await checkTable();
+
+    // Switch to bar chart view
+    await page.click('button:has-text("Bar Chart")');
+    await checkBarChart();
+
+    /*
+    // Check flip axes functionality
+    const flipButton = page.locator('button:has-text("Flip Axes")');
+    await expect(flipButton).toBeVisible();
+    await flipButton.click();
+    await expect(page.locator('.chart-wrapper')).toHaveAttribute('data-index-axis', 'y');
+    */
+
+    // Switch back to table view
+    await page.click('button:has-text("Table View")');
+    await checkTable();
+
+    // Switch to 'Many Columns Dataset'
+    await page.selectOption('select.dropdown', 'Many Columns Dataset');
+    await checkTable();
+
+    // Verify more columns are present
+    const headers = await page.locator('th').allTextContents();
+    expect(headers.length).toBeGreaterThan(3); // Assuming 'Many Columns' has more than 3 columns
+
+    // Switch to bar chart view for 'Many Columns Dataset'
+    await page.click('button:has-text("Bar Chart")');
+    await checkBarChart();
+
+    // Switch to 'Invalid Data' dataset
+    await page.selectOption('select.dropdown', 'Invalid Data');
+    
+    // Check for error message in bar chart view
+    const errorMessage = page.locator('.error-message');
+    await expect(errorMessage).toBeVisible();
+    await expect(errorMessage).toContainText('No numeric columns found for Y-axis');
+
+    // Switch back to table view for 'Invalid Data'
+    await page.click('button:has-text("Table View")');
+    await checkTable();
+
+    // Finally, switch back to 'Simple Bar Chart' and verify bar chart
+    await page.selectOption('select.dropdown', 'Simple Bar Chart Data');
+    await page.click('button:has-text("Bar Chart")');
+    await checkBarChart();
+
+    // Verify the chart title
+    const chartTitle = await page.locator('.bar-chart-container h2').textContent();
+    expect(chartTitle).toBe('Simple Bar Chart Data');
+  });
 });
