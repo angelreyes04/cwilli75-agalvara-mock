@@ -11,14 +11,34 @@ interface BarChartViewProps {
 export function BarChartView({ data, selectedDatasetName }: BarChartViewProps) {
     const [chartData, setChartData] = useState<any>(null);
     const [error, setError] = useState<string | null>(null);
-    const [axesFlipped, setAxesFlipped] = useState<boolean>(false);
-    const [canFlipAxes, setCanFlipAxes] = useState<boolean>(false);
-    const [xAxisLabel, setXAxisLabel] = useState<string>('');
-    const [yAxisLabel, setYAxisLabel] = useState<string>('');
+    const [xAxis, setXAxis] = useState<string>('');
+    const [yAxis, setYAxis] = useState<string>('');
+    const [availableColumns, setAvailableColumns] = useState<{
+        x: string[],
+        y: string[]
+    }>({ x: [], y: [] });
 
     useEffect(() => {
-        processData();
-    }, [data, axesFlipped]);
+        if (data && data.length > 0) {
+            const columns = Object.keys(data[0]);
+            const xColumns = columns.filter(col => 
+                data.every(row => typeof row[col] === 'string' || typeof row[col] === 'number')
+            );
+            const yColumns = columns.filter(col => 
+                data.every(row => typeof row[col] === 'number')
+            );
+            setAvailableColumns({ x: xColumns, y: yColumns });
+        }
+    }, [data]);
+
+    useEffect(() => {
+        if (xAxis && yAxis) {
+            processData();
+        } else {
+            setChartData(null);
+            setError("Please select both X and Y axes");
+        }
+    }, [xAxis, yAxis, data]);
 
     const processData = () => {
         if (!data || data.length === 0) {
@@ -26,38 +46,13 @@ export function BarChartView({ data, selectedDatasetName }: BarChartViewProps) {
             return;
         }
 
-        const keys = Object.keys(data[0]);
-        const numericKeys = keys.filter(key => data.every(item => typeof item[key] === 'number'));
-        const nonNumericKeys = keys.filter(key => !numericKeys.includes(key));
-
-        if (numericKeys.length === 0) {
-            setError("No numeric columns found for Y-axis");
-            setCanFlipAxes(false);
-            return;
-        }
-
-        let xKey = axesFlipped ? numericKeys[0] : (nonNumericKeys[0] || numericKeys[0]);
-        let yKey = axesFlipped ? (nonNumericKeys[0] || numericKeys[1] || numericKeys[0]) : numericKeys[0];
-
-
-        if (axesFlipped && !numericKeys.includes(yKey)) {
-            alert("Cannot flip axes: Y-axis must contain numeric values");
-            setAxesFlipped(false);
-            return;
-        }
-
-        setCanFlipAxes(numericKeys.length > 1 || (numericKeys.length === 1 && nonNumericKeys.length > 0));
-
-        setXAxisLabel(xKey);
-        setYAxisLabel(yKey);
-
-        const labels = data.map(item => item[xKey]);
-        const values = data.map(item => item[yKey]);
+        const labels = data.map(item => item[xAxis]);
+        const values = data.map(item => item[yAxis]);
 
         setChartData({
             labels,
             datasets: [{
-                label: yKey,
+                label: yAxis,
                 data: values,
                 backgroundColor: 'rgba(75, 192, 192, 0.6)',
             }]
@@ -65,38 +60,54 @@ export function BarChartView({ data, selectedDatasetName }: BarChartViewProps) {
         setError(null);
     };
 
-    const handleFlipAxes = () => {
-        const newFlippedState = !axesFlipped;
-        setAxesFlipped(newFlippedState);
+    const handleAxisChange = (axis: 'x' | 'y', value: string) => {
+        if (axis === 'x') {
+            setXAxis(value);
+        } else {
+            setYAxis(value);
+        }
     };
 
     return (
         <div className="bar-chart-container">
             <h2>{selectedDatasetName}</h2>
-            {canFlipAxes && (
-                <div className="flip-axes-container">
-                    <button 
-                        onClick={handleFlipAxes} 
-                        className="flip-axes-button"
-                        title="Switch between vertical and horizontal bar orientation"
+            <div className="axis-selection">
+                <div className="axis-dropdown">
+                    <label htmlFor="x-axis">X Axis: </label>
+                    <select
+                        id="x-axis"
+                        value={xAxis}
+                        onChange={(e) => handleAxisChange('x', e.target.value)}
                     >
-                        Flip Axes
-                    </button>
-                    <span className="flip-axes-explanation">
-                        (Switches between vertical and horizontal bar orientation)
-                    </span>
+                        <option value="">Select X Axis</option>
+                        {availableColumns.x.map(col => (
+                            <option key={col} value={col}>{col}</option>
+                        ))}
+                    </select>
                 </div>
-            )}
+                <div className="axis-dropdown">
+                    <label htmlFor="y-axis">Y Axis: </label>
+                    <select
+                        id="y-axis"
+                        value={yAxis}
+                        onChange={(e) => handleAxisChange('y', e.target.value)}
+                    >
+                        <option value="">Select Y Axis</option>
+                        {availableColumns.y.map(col => (
+                            <option key={col} value={col}>{col}</option>
+                        ))}
+                    </select>
+                </div>
+            </div>
             {error ? (
                 <div className="error-message">{error}</div>
             ) : chartData && (
-                <div className="chart-wrapper" style={{ overflowX: 'auto', width: '100%'}}>
+                <div className="chart-wrapper" style={{ height: '600px', width: '100%' }}>
                     <Bar
                         data={chartData}
                         options={{
                             responsive: true,
                             maintainAspectRatio: false,
-                            indexAxis: axesFlipped ? 'y' : 'x',
                             plugins: {
                                 legend: {
                                     position: 'top' as const,
@@ -110,7 +121,7 @@ export function BarChartView({ data, selectedDatasetName }: BarChartViewProps) {
                                 x: {
                                     title: {
                                         display: true,
-                                        text: xAxisLabel,
+                                        text: xAxis,
                                     },
                                     ticks: {
                                         autoSkip: false,
@@ -121,7 +132,7 @@ export function BarChartView({ data, selectedDatasetName }: BarChartViewProps) {
                                 y: {
                                     title: {
                                         display: true,
-                                        text: yAxisLabel,
+                                        text: yAxis,
                                     },
                                 }
                             }
